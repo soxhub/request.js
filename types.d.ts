@@ -56,7 +56,7 @@ declare namespace request {
         ): RequiredUriUrl & TOptions;
 
         forever(agentOptions: any, optionsArg: any): TRequest;
-        jar(store?: any): CookieJar;
+        jar(jar?: CookieJar): CookieJar;
         cookie(str: string): Cookie | undefined;
 
         debug: boolean;

@@ -7,6 +7,7 @@ var os = require('os');
 //@ts-ignore
 var pkg = require('./package.json');
 var fs = require('fs'); // only for streams
+var cookies = require('./lib/cookies');
 
 /**
  * @typedef {import('./').Request} Request
@@ -41,7 +42,8 @@ var _keys = Object.keys(_defaults).concat([
     'auth',
     'formData',
     'FormData',
-    'userAgent' // non-standard for request.js
+    'userAgent', // non-standard for request.js
+    'jar',
 ]);
 
 function debug() {
@@ -664,7 +666,6 @@ function setDefaults(defs) {
         }
     );
     smartUrequest.del = urequest.delete;
-
     return smartUrequest;
 }
 
@@ -696,7 +697,17 @@ function getUserAgent(additional) {
     return ua;
 }
 
-exports.request = setDefaults(_defaults);
+const _request = setDefaults(_defaults);
+
+_request.jar = function (jar: CookieJar) {
+    return cookies.jar(jar)
+}
+
+_request.cookie = function (str) {
+    return cookies.parse(str)
+}
+
+exports.request = _request;
 exports._keys = _keys;
 
 module.exports = exports.request;
